@@ -37,10 +37,9 @@
       this.setConfig()
       //绑定默认事件
       this.addEvent()
-      console.log(this)
-      if(this.config.auto){
-        this.atuoPlay()
-      }
+
+      //是否自动播放
+      this.autoPlay()
       
     },
 
@@ -77,9 +76,7 @@
       },true)
       $tab.addEventListener('mouseout', function(e){
         clearInterval(_this.timer);
-        if(config.auto){
-          _this.atuoPlay()
-        }
+        _this.autoPlay()
       },true)
       $tab.addEventListener(triggerType, function(e){
         var target = e.target || e.srcElement;
@@ -95,9 +92,11 @@
         }
       }, true)
     },
-    //自动播放
-    atuoPlay: function(){
+    //是否自动播放
+    autoPlay: function(){
       var _this = this;
+          auto = _this.config.auto;
+      if(!auto) return;
       this.timer = setInterval(function(){
         _this.loopIndex++
         if(_this.loopIndex>=_this.tabLength){
