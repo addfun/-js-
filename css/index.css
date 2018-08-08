@@ -1,0 +1,75 @@
+body{
+  margin: 0;
+}
+ul{
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.tab-wrapper{
+  width: 250px;
+  margin: 50px auto;
+}
+.tab-wrapper .tab-title{
+  width: 100%;
+}
+.tab-wrapper .tab-title::after{
+  content: '';
+  display: block;
+  clear: both;
+}
+.tab-wrapper .tab-title-item{
+  position: relative;
+  float: left;
+  top: 1px;
+  height: 30px;
+  margin-right: 5px;
+  padding: 0 16px;
+  border: 1px #ccc solid;
+  border-bottom: none;
+  text-align: center;
+  line-height: 30px;
+  background-color: #f1f1f1;
+  color: #333;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  cursor: pointer;
+}
+.tab-wrapper .active{
+  border: 1px red solid;
+  border-bottom: none;
+  background-color: #fff;
+  color: #111;
+  z-index: 1;
+}
+.tab-wrapper .tab-content{
+  position: relative;
+  width: 100%;
+  height: 200px;
+}
+.tab-wrapper .tab-content .tab-content-item{
+  display: none;
+  position: absolute;/*%%要用js改成行间来进行配置%%*/
+  width: 100%;
+  height: 200px;
+  padding-top: 20px;
+  text-align: center;
+  border: 1px red solid;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  box-sizing: border-box;
+}
+.tab-wrapper .tab-content .tab-content-item:nth-of-type(1){
+  color: orange;
+}
+.tab-wrapper .tab-content .tab-content-item:nth-of-type(2){
+  color: green;
+}
+.tab-wrapper .tab-content .tab-content-item:nth-of-type(3){
+  color: blue;
+}
+.tab-wrapper .tab-content .current{
+  display: block;
+}
+

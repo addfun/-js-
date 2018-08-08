@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>js选项卡</title>
+  <link rel="stylesheet" href="./css/index.css">
+  <script src="./js/tool.js"></script>
+</head>
+<body>
+  <div class="tab-wrapper tabList" data-config='{
+      "invoke": 1,
+      "effect": "fade"
+    }'
+  >
+    <ul class="tab-title">
+      <li class="tab-title-item">1</li>
+      <li class="tab-title-item">2</li>
+      <li class="tab-title-item">3</li>
+      <li class="tab-title-item">4</li>
+    </ul>
+    <ul class="tab-content">
+      <li class="tab-content-item">内容1</li>
+      <li class="tab-content-item">内容2</li>
+      <li class="tab-content-item">内容3</li>
+      <li class="tab-content-item">内容4</li>
+    </ul>
+  </div>
+  <div class="tab-wrapper tabList" data-config='{
+      "invoke": 2,
+      "triggerType": "click",
+      "auto": false
+    }'
+  >
+    <ul class="tab-title">
+      <li class="tab-title-item">1</li>
+      <li class="tab-title-item">2</li>
+      <li class="tab-title-item">3</li>
+    </ul>
+    <ul class="tab-content">
+      <li class="tab-content-item">内容1</li>
+      <li class="tab-content-item">内容2</li>
+      <li class="tab-content-item">内容3</li>
+    </ul>
+  </div>
+
+<script src="./js/index.js"></script>
+<script>
+  TabFn(document.getElementsByClassName("tabList"))
+</script>
+</body>
+</html>
