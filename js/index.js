@@ -80,7 +80,7 @@
       },true)
       $tab.addEventListener(triggerType, function(e){
         var target = e.target || e.srcElement;
-        if(target.tagName === 'LI'){
+        if(target.className === 'tab-title-item'){
           var index = Array.prototype.indexOf.call($titleItem,target)
           _this.loopIndex = index;
           if(target.className.indexOf('active') !== -1 || target.className.indexOf('tab-title-item') === -1) return;
