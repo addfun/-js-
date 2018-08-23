@@ -5,47 +5,59 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>原生js选项卡</title>
-  <link rel="stylesheet" href="./css/index.css">
+  <link rel="stylesheet" href="./css/tab.css">
   <script src="./js/tool.js"></script>
 </head>
 <body>
   <div class="tab-wrapper tabList" data-config='{
       "invoke": 1,
-      "effect": "fade"
+      "effect": "fade",
+      "auto": 2000,
+      "moveStyle": "easeBoth"
     }'
   >
-    <ul class="tab-title">
-      <li class="tab-title-item">1</li>
-      <li class="tab-title-item">2</li>
-      <li class="tab-title-item">3</li>
-      <li class="tab-title-item">4</li>
-    </ul>
-    <ul class="tab-content">
-      <li class="tab-content-item">内容1</li>
-      <li class="tab-content-item">内容2</li>
-      <li class="tab-content-item">内容3</li>
-      <li class="tab-content-item">内容4</li>
-    </ul>
+    <div class="tab-title-wrapper">
+      <ul class="tab-title">
+        <li class="tab-title-item">1</li>
+        <li class="tab-title-item">2</li>
+        <li class="tab-title-item">3</li>
+        <li class="tab-title-item">4</li>
+      </ul>
+    </div>
+    <div class="tab-content-wrapper">
+      <ul class="tab-content">
+        <li class="tab-content-item">内容1</li>
+        <li class="tab-content-item">内容2</li>
+        <li class="tab-content-item">内容3</li>
+        <li class="tab-content-item">内容4</li>
+      </ul>
+    </div>
   </div>
+
   <div class="tab-wrapper tabList" data-config='{
       "invoke": 2,
       "triggerType": "click",
-      "auto": false
+      "effect": "slide",
+      "auto": 0
     }'
   >
-    <ul class="tab-title">
-      <li class="tab-title-item">1</li>
-      <li class="tab-title-item">2</li>
-      <li class="tab-title-item">3</li>
-    </ul>
-    <ul class="tab-content">
-      <li class="tab-content-item">内容1</li>
-      <li class="tab-content-item">内容2</li>
-      <li class="tab-content-item">内容3</li>
-    </ul>
+    <div class="tab-title-wrapper">  
+      <ul class="tab-title">
+        <li class="tab-title-item">1</li>
+        <li class="tab-title-item">2</li>
+        <li class="tab-title-item">3</li>
+      </ul>
+    </div>
+    <div class="tab-content-wrapper">
+      <ul class="tab-content">
+        <li class="tab-content-item">内容1</li>
+        <li class="tab-content-item">内容2</li>
+        <li class="tab-content-item">内容3</li>
+      </ul>
+    </div>
   </div>
 
-<script src="./js/index.js"></script>
+<script src="./js/tab.js"></script>
 <script>
   TabFn(document.getElementsByClassName("tabList"))
 </script>

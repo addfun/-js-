@@ -11,11 +11,12 @@ Element.prototype.getClass = function(){
  * @param {string} className 
  */
 Element.prototype.addClass = function(className){
-  var cls = this.getClass()
-  var reg = new RegExp(className,'gm')
+  var cls = this.getClass(),
+      reg = new RegExp(className,'gm');
   if(!reg.test(cls)){
     this.setAttribute('class', cls +' '+ className)
   }
+  return this;
 }
 
 /**
@@ -46,3 +47,20 @@ Element.prototype.sibling = function(){
   }
   return arr;
 }
+
+//兼容处理
+requestAnimateFrame = (function(){
+  return window.requestAnimationFrame || 
+  window.webkitRequestAnimationFrame || 
+  window.mozRequestAnimationFrame || function(fn){
+    return setTimeout(fn,17)
+  }
+}());
+
+cancelAnimateFrame = (function(){
+  return window.cancelAnimationFrame || 
+  window.webkitCancelAnimationFrame || 
+  window.mozCancelAnimationFrame || function(id){
+    clearTimeout(id)
+  }
+}());

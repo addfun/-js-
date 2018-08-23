@@ -11,7 +11,7 @@
     this.init(tab)
   }
 
-  TabFn.prototype={
+  TabFn.prototype = {
     //将constructor指正
     constructor: TabFn,
     
@@ -24,7 +24,7 @@
         //用来定义鼠标的触发类型
         "triggerType": "mouseenter",//click
         //用来定义内容的切换效果
-        "effect": "",//slider fade
+        "effect": "",//slide fade
         //默认显示第几张tab
         "invoke": 1,//1,2,3. <length
         //是否为自动轮播，几毫秒轮播间隔
@@ -50,25 +50,64 @@
       extend(this.config,getConfig);
 
       //保存dom节点
+      this.$title = $tab.getElementsByClassName("tab-title")[0];
+      this.$content = $tab.getElementsByClassName("tab-content")[0];
       this.$titleItem = $tab.getElementsByClassName("tab-title-item");
       this.$contentItem = $tab.getElementsByClassName("tab-content-item");
     },
     
     //设置配置参数
     setConfig: function(){
-      var invoke = this.config.invoke;
-      this.timer = null
-      this.loopIndex = invoke-1
-      this.tabLength = this.$titleItem.length
-      this.$titleItem[invoke-1].addClass('active')
-      this.$contentItem[invoke-1].addClass('current')
-      this.choseLoopFun()
+      var _this = this;
+      var config = _this.config;
+      var effect = config.effect;
+      var invoke = config.invoke;
+      var moveStyle = config.moveStyle || 'linear';
+      _this.timer = null
+      _this.loopIndex = invoke-1
+      _this.tabLength = _this.$titleItem.length
+      
+      //配置过度方式函数
+      if(effect === "slide"){
+        var widthItem = _this.$contentItem[0].offsetWidth,
+            num = _this.tabLength;
+        _this.$content.addClass("tab-slide").style.width = widthItem*num+'px';
+        //配置显示当前页
+        _this.$titleItem[invoke-1].addClass('active')
+        _this.$content.style.left = -(invoke-1) * widthItem +'px'
+        //slide过度方式函数
+        _this.moveFun = function(){
+          var _this = this,
+              $content = _this.$content,
+              loopIndex = _this.loopIndex;
+          _this.slideTo($content,{
+            left: -1*widthItem * loopIndex
+          }, 500, moveStyle)
+        }
+      }else if(effect === "fade"){
+        _this.$content.addClass("tab-fade")
+        //配置显示当前页
+        _this.$titleItem[invoke-1].addClass('active')
+        _this.$contentItem[invoke-1].addClass('current')
+        //fade过度方式函数
+        _this.moveFun = function(){
+          var _this = this,
+              $contentItem = _this.$contentItem,
+              loopIndex = _this.loopIndex;
+          $contentItem[loopIndex].sibling().forEach(function(el){
+            _this.fadeOut(el, 500, moveStyle);
+          })
+          _this.fadeIn($contentItem[loopIndex], 500, moveStyle);
+        }
+      }else{
+        _this.$content.addClass("tab-fade")
+      }
     },
     //绑定事件函数
     addEvent: function(){
-      var config = this.config,
+      var _this = this,
+          config = _this.config,
           triggerType = config.triggerType == 'click' ? 'click' : 'mouseenter',
-          _this = this,
           $tab = _this.$tab,
           $titleItem = _this.$titleItem;
       $tab.addEventListener('mouseenter', function(e){
@@ -88,7 +127,7 @@
             el.removeClass('active');// this.classList.remove('active')
           })
           target.addClass('active');// this.classList.add('active')
-          _this.choseLoopFun()
+          _this.moveFun()
         }
       }, true)
     },
@@ -114,48 +153,38 @@
       $titleItem[loopIndex].sibling().forEach(function(el){
         el.removeClass('active')
       })
-      _this.choseLoopFun()
+      _this.moveFun()
     },
-    //根据配置选择循环方法
-    choseLoopFun: function(){
-      var _this = this,
-          config = _this.config;
-      if(config.effect == 'fade'){
-        _this.choseLoopFun = function(){
-          var _this = this,
-              $contentItem = _this.$contentItem,
-              loopIndex = _this.loopIndex;
-          $contentItem[loopIndex].sibling().forEach(function(el){
-            _this.fadeOut(el);
-          })
-          _this.fadeIn($contentItem[loopIndex]);
-        }
-      }else{
-        _this.choseLoopFun = function(){
-          var _this = this,
-            $contentItem = _this.$contentItem,
-            loopIndex = _this.loopIndex;
-          $contentItem[loopIndex].sibling().forEach(function(el){
-            el.removeClass('current');
-          })
-          $contentItem[loopIndex].addClass('current');
-        }
-      }
+    
+    moveFun: function(){
+      var _this = this;
+          $contentItem = _this.$contentItem,
+          loopIndex = _this.loopIndex;
+      $contentItem[loopIndex].sibling().forEach(function(el){
+        el.removeClass('current');
+      })
+      $contentItem[loopIndex].addClass('current');
     },
     //淡入
-    fadeIn: function(dom, time){
+    fadeIn: function(dom, time, moveStyle){
       dom.addClass('current')
       dom.style.opacity = 0;
-      move(dom,{opacity: 100},function(){
+      animation(dom,{opacity: 100},function(){
         // console.log('ok! 这是执行回调函数')
-      },time)
+      },time, moveStyle)
     },
 
     //淡出
-    fadeOut: function(dom, time){
-      move(dom,{opacity: 0},function(){
+    fadeOut: function(dom, time, moveStyle){
+      animation(dom,{opacity: 0},function(){
         dom.removeClass('current')
-      },time)
+      },time, moveStyle)
+    },
+    //滑动
+    slideTo: function(dom, json, time, moveStyle){
+      animation(dom,json,function(){
+        // console.log('ok')
+      },time, moveStyle)
     }
   }
 
@@ -174,11 +203,11 @@
   root.TabFn = initTabFn //将initTabFn暴露给全局 该函数的上一级执行期上下文(ao)被外部的TabFn变量引用 形成闭包
 
   /*--------------------------------------------------------------------------------------
-  以下是该组件用到的一些封装的方法(包括了公共方法，在这里也没作为全局来使用了（临时写的） 0..0！ )
+  以下是该组件用到的一些封装的方法(包括了公共方法，防止命名冲突 在这里也没作为全局来使用了（临时写的） 0..0！ )
   ---------------------------------------------------------------------------------------*/
 
   /**
-   * @desc 运动类
+   * @desc 返回运动方式函数
    * t:当前时长
    * b:初始值
    * c:|最终值-初始值|
@@ -221,13 +250,13 @@
   }
 
   /**
-   * @desc 时间运动函数
+   * @desc 时间运动函数(类似jq的animate)
    * @param {object} dom 元素节点
    * @param {object} json 元素css素性对象
    * @param {function} sucHandle 运动完成回调函数
    * @param {number} time 运动时间(默认400毫秒)
    */
-  function move(dom, json, sucHandle, time){
+  function animation(dom, json, sucHandle, time, type){
     var iCurr = {},
         startTime = +new Date();
     if(typeof sucHandle != 'function'){
@@ -244,15 +273,15 @@
         iCurr[attr] = parseInt(getStyle(dom, attr))
       }
     }
-    animation()
-    function animation(){
-      cancelAnimationFrame(dom._timer_)
+    move()
+    function move(){
+      cancelAnimateFrame(dom._timer_)
       var t = time- Math.max(0, startTime + time - (+new Date()));
-      if(t < time){
+    if(t < time){
         for(var attr in json){
           var s = iCurr[attr],
               l = json[attr] - s,
-              p = moveStyle.easeIn(t, s, l, time);
+              p = moveStyle[type](t, s, l, time);
           if(attr == 'opacity'){
             dom.style.opacity = p/100;
             dom.style.filter = 'alpha(opacity=' + p + ')';
@@ -260,9 +289,9 @@
             dom.style[attr] = p + 'px';
           }
         }
-        dom._timer_ = requestAnimationFrame(animation);
+        dom._timer_ = requestAnimateFrame(move);
       }else{
-        cancelAnimationFrame(dom._timer_)
+        cancelAnimateFrame(dom._timer_)
         for(var attr in json){
           if(attr == 'opacity'){
             dom.style.opacity = json[attr] /100;
